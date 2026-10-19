@@ -1,0 +1,291 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 48px 24px;
+}
+
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 24px;
+}
+
+.eyebrow {
+  color: var(--ember);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1;
+  margin: 0 0 12px;
+}
+
+.lead {
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+
+.tokenBox,
+.connection,
+.panel,
+.editor {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.tokenBox {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px;
+}
+
+.connection p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.tokenRow {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.panel {
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.eventButton {
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.eventButton:hover,
+.eventButtonActive {
+  border-color: var(--border-default);
+  background: var(--bg-tertiary);
+}
+
+.eventSlug {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.editor {
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.slug {
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 13px;
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.formSection {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+}
+
+.formSection h3 { font-size: 18px; }
+
+.formSection summary { cursor: pointer; color: var(--text-secondary); }
+
+.formSection textarea {
+  width: 100%; min-height: 160px; margin-top: 10px;
+  border: 1px solid var(--border-subtle); border-radius: 6px;
+  background: var(--bg-primary); color: var(--text-primary);
+  padding: 10px 12px; font: 13px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.numberGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 180px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.checkRow {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.checkRow label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.status {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.error {
+  color: var(--st-blocked, #ce8a84);
+}
+
+.success {
+  color: var(--st-ok, #7cbf8f);
+}
+
+.empty {
+  color: var(--text-secondary);
+  padding: 24px;
+}
+
+.overrides {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.overrideList {
+  display: grid;
+  gap: 6px;
+}
+
+.overrideItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.overrideItem span {
+  flex: 1;
+  min-width: 180px;
+}
+
+.overrideForm {
+  display: grid;
+  grid-template-columns: minmax(140px, 180px) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+}
+
+.overrideHours { display: grid; gap: 12px; }
+.overrideHours summary { color: var(--text-secondary); cursor: pointer; }
+.overrideHours textarea { width: 100%; min-height: 100px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); padding: 8px; font: 13px/1.5 ui-monospace, Consolas, monospace; }
+
+@media (max-width: 860px) {
+  .header,
+  .grid,
+  .row,
+  .numberGrid,
+  .tokenRow {
+    grid-template-columns: 1fr;
+  }
+
+  .overrideForm {
+    grid-template-columns: 1fr;
+  }
+
+  .header,
+  .connection,
+  .editorHeader {
+    display: grid;
+  }
+}

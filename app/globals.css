@@ -1,0 +1,271 @@
+:root { color-scheme: light; --bg-primary:#fff; --bg-secondary:#f7f8fa; --bg-tertiary:#eef0f4; --text-primary:#18202b; --text-secondary:#536174; --text-muted:#64748b; --border-subtle:#dce1e8; --border-default:#bfc8d5; --ember:#3559d9; --ember-hover:#2847b7; --st-ok:#167348; --st-blocked:#b42318; --font-body:Arial,sans-serif; --font-heading:Arial,sans-serif; }
+* { box-sizing:border-box; } body { margin:0; background:var(--bg-primary); color:var(--text-primary); font-family:Arial,sans-serif; line-height:1.5; } a { color:var(--ember); } button,input,select,textarea { font:inherit; } button,a,input,select,textarea { touch-action:manipulation; } button { cursor:pointer; } button:disabled { cursor:default; } :focus-visible { outline:3px solid var(--ember); outline-offset:3px; }
+.container { max-width:1040px; margin:auto; padding:24px; } .container--narrow { max-width:820px; } .section { padding:36px 0; } .btn { display:inline-flex; align-items:center; justify-content:center; padding:10px 18px; border:1px solid var(--border-default); border-radius:6px; text-decoration:none; gap:8px; font-weight:600; } .btn--primary { background:var(--ember); color:white; border-color:var(--ember); } .btn--secondary { background:var(--bg-primary); color:var(--text-primary); } .btn--sm { padding:6px 12px; } .btn:disabled { opacity:.6; } .eyebrow { color:var(--ember); } .lead { color:var(--text-secondary); } .lb-form__error { color:var(--st-blocked); } .lb-form__success { padding:24px; border:1px solid var(--border-subtle); border-radius:8px; } .lb-form__success-mark { color:var(--st-ok); } .lb-form__field { display:grid; gap:6px; } .lb-form__field input,.lb-form__field textarea,.lb-form__field select { width:100%; padding:10px; border:1px solid var(--border-default); border-radius:5px; background:var(--bg-primary); color:var(--text-primary); } .lb-form__grid { display:grid; gap:16px; } .lb-form__hp { position:absolute; left:-10000px; } .embed-page { padding:16px; max-width:900px; margin:auto; } nav { display:flex; flex-wrap:wrap; gap:16px; } code { overflow-wrap:anywhere; } textarea { max-width:100%; }
+/* --------------------------------------------
+   lbScheduler — in-page booking scheduler.
+   Calendar left, slot list right; one column on
+   mobile. Reuses .lb-form for the booking form.
+   No inner scroll areas: the page keeps one
+   scrollbar.
+   -------------------------------------------- */
+
+.lb-scheduler {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 880px;
+}
+
+.lb-scheduler__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lb-scheduler__description {
+  margin: 0;
+  max-width: 640px;
+  color: var(--text-secondary);
+}
+
+.lb-scheduler__picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.lb-scheduler__month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.lb-scheduler__month-label {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lb-scheduler__nav {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lb-scheduler__nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lb-scheduler__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.lb-scheduler__weekday {
+  padding-bottom: 6px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.lb-scheduler__day {
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.lb-scheduler__day:hover:not(:disabled) {
+  border-color: var(--ember-light);
+}
+
+.lb-scheduler__day:disabled {
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0.55;
+  cursor: default;
+}
+
+.lb-scheduler__day.is-today:disabled {
+  text-decoration: underline;
+}
+
+.lb-scheduler__day.is-selected {
+  background: var(--ember);
+  color: var(--ember-contrast);
+}
+
+.lb-scheduler__day:focus-visible,
+.lb-scheduler__slot:focus-visible,
+.lb-scheduler__nav:focus-visible,
+.lb-scheduler__link:focus-visible {
+  outline: 2px solid var(--ember-light);
+  outline-offset: 2px;
+}
+
+.lb-scheduler__slots {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.lb-scheduler__day-label {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lb-scheduler__slot-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lb-scheduler__slot {
+  width: 100%;
+  padding: 12px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.lb-scheduler__slot:hover {
+  border-color: var(--ember-light);
+  color: var(--ember-text);
+}
+
+.lb-scheduler__status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.lb-scheduler__status p {
+  margin: 0;
+}
+
+.lb-scheduler__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-body);
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.lb-scheduler__chosen {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+}
+
+.lb-scheduler__chosen p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.lb-scheduler__chosen strong {
+  color: var(--text-primary);
+}
+
+.lb-scheduler__captcha {
+  min-height: 65px;
+}
+
+.lb-scheduler__done-when {
+  margin: 8px 0 0;
+  color: var(--text-primary);
+  font-size: var(--text-lead);
+  font-weight: 600;
+}
+
+.lb-scheduler__done p {
+  margin: 8px 0 0;
+}
+
+.lb-scheduler__done .lead {
+  margin-top: 16px;
+}
+
+.lb-scheduler__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.lb-scheduler__manage-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lb-scheduler__manage-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lb-booking-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 640px;
+}
+
+.lb-booking-confirmation p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .lb-scheduler__picker {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .lb-scheduler__chosen {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+
+:root { --font-mono:monospace; --text-eyebrow:12px; --text-lead:18px; --ember-light:#6682ee; --ember-text:#2847b7; --ember-contrast:#fff; }
+.lb-form__row { display:grid; grid-template-columns:1fr 1fr; gap:16px; } .lb-form__fineprint,.lb-form__hint { color:var(--text-secondary); font-size:13px; } .lb-form__fineprint { margin-top:12px; } @media(max-width:600px) { .lb-form__row { grid-template-columns:1fr; } }

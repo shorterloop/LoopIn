@@ -1,0 +1,10 @@
+.days { display: grid; gap: 0; border-top: 1px solid var(--border-subtle); }
+.day { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+.dayName { display: flex; align-items: flex-start; gap: 8px; }
+.dayName input { margin-top: 4px; }
+.ranges { display: grid; gap: 8px; justify-items: start; }
+.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.range input { max-width: 130px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); padding: 7px; font: inherit; }
+.iconButton { border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 22px; line-height: 1; width: 30px; height: 30px; }
+.add { border: 0; background: transparent; color: var(--ember); cursor: pointer; padding: 0; font: inherit; }
+@media (max-width: 640px) { .day { grid-template-columns: 1fr; } .range .iconButton { margin-left: auto; } }

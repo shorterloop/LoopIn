@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: scheduler
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: ["5432:5432"]
+    volumes: ["scheduler-db:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d scheduler"]
+      interval: 5s
+      retries: 10
+  app:
+    build:
+      context: .
+      args:
+        SCHEDULER_EMBED_ORIGINS: ${SCHEDULER_EMBED_ORIGINS:-http://localhost:3000}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
+    env_file: .env.local
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/scheduler
+      PORT: 3000
+    ports: ["3008:3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  scheduler-db:

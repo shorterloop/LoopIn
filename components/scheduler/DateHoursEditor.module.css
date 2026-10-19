@@ -1,0 +1,6 @@
+.editor { display: grid; gap: 12px; }
+.closed { display: inline-flex; gap: 8px; align-items: center; }
+.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.range input { min-width: 105px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); padding: 8px; font: inherit; }
+.range button { width: 32px; height: 32px; display: inline-grid; place-items: center; border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; }
+.add { width: max-content; border: 0; padding: 0; background: transparent; color: var(--ember); font: inherit; cursor: pointer; }
