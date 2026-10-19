@@ -118,6 +118,7 @@ export default function SchedulerAdmin() {
   const [calendarMode, setCalendarMode] = useState<'environment' | 'database' | 'none' | null>(null)
   const [calendarId, setCalendarId] = useState('')
   const [calendarHealthy, setCalendarHealthy] = useState(false)
+  const [connectingGoogle, setConnectingGoogle] = useState(false)
 
   const selected = useMemo(() => eventTypes.find((eventType) => eventType.id === selectedId) ?? null, [eventTypes, selectedId])
   const isCreating = selectedId === NEW_ID
@@ -129,6 +130,10 @@ export default function SchedulerAdmin() {
   useEffect(() => {
     const saved = window.sessionStorage.getItem(STORAGE_KEY)
     if (saved) setToken(saved)
+    const result = new URLSearchParams(window.location.search).get('calendar')
+    if (result === 'connected') setMessage('Google Calendar connected. Load event types to refresh its status.')
+    if (result === 'denied') setError('Google Calendar connection was not authorized. Try Connect Google again.')
+    if (result === 'error') setError('Google Calendar connection failed. Check the server logs for the OAuth callback error, and verify the client credentials, redirect URI and encryption key.')
   }, [])
 
   useEffect(() => {
@@ -178,6 +183,9 @@ export default function SchedulerAdmin() {
         setCalendarMode(calendarJson.mode)
         setCalendarId(calendarJson.calendarId)
         setCalendarHealthy(calendarJson.healthy)
+      } else {
+        setCalendarMode(null)
+        setError(calendarJson?.error || 'Could not load Google Calendar status. Check the server logs and database migrations.')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load event types.')
@@ -187,16 +195,20 @@ export default function SchedulerAdmin() {
   }
 
   async function connectGoogle() {
+    if (connectingGoogle) return
+    setConnectingGoogle(true)
     setError('')
     try {
       const res = await fetch('/api/scheduler/admin/google/connect', {
         method: 'POST', headers: {Authorization: `Bearer ${token.trim()}`},
       })
       const json = await res.json().catch(() => ({}))
-      if (!res.ok || !json.ok) throw new Error(json.error || 'Could not start Google connection.')
+      if (!res.ok || !json.ok) throw new Error(res.status === 401 ? 'Admin token rejected. Reload event types with the configured admin token.' : json.error || 'Could not start Google connection.')
+      if (typeof json.url !== 'string') throw new Error('Google connection did not return an authorization URL.')
       window.location.assign(json.url)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not start Google connection.')
+      setConnectingGoogle(false)
     }
   }
 
@@ -348,9 +360,12 @@ export default function SchedulerAdmin() {
           </label>
         </section>
 
+        {error && <p className={`${styles.status} ${styles.error}`} role="alert">{error}</p>}
+        {message && <p className={styles.status} role="status">{message}</p>}
+
         {calendarMode && <section className={styles.connection} aria-label="Google Calendar connection">
           <div><strong>Google Calendar</strong><p>{calendarMode === 'none' ? 'Not connected' : `${calendarHealthy ? 'Ready' : 'Connection needs attention'} · ${calendarMode} · ${calendarId}`}</p></div>
-          {calendarMode === 'none' && <button className="btn btn--secondary" type="button" onClick={connectGoogle}>Connect Google</button>}
+          {calendarMode === 'none' && <button className="btn btn--secondary" type="button" onClick={connectGoogle} disabled={connectingGoogle}>{connectingGoogle ? 'Connecting?' : 'Connect Google'}</button>}
           {calendarMode === 'database' && <button className="btn btn--secondary" type="button" onClick={disconnectGoogle}>Disconnect</button>}
         </section>}
 
@@ -488,8 +503,6 @@ export default function SchedulerAdmin() {
                     <button className="btn btn--secondary" type="button" onClick={() => setForm(isCreating ? {...newForm} : formFromEventType(selected!))}>
                       Reset
                     </button>
-                    {message && <span className={`${styles.status} ${message === 'Saved.' || message === 'Event type created.' ? styles.success : ''}`}>{message}</span>}
-                    {error && <span className={`${styles.status} ${styles.error}`} role="alert">{error}</span>}
                   </div>
                 </form>
                 {!isCreating && <section className={styles.overrides} aria-label="Date overrides">

@@ -11,8 +11,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ok: false, error: 'This calendar uses GOOGLE_REFRESH_TOKEN from the server environment.'}, {status: 409})
     }
     const clientId = process.env.GOOGLE_CLIENT_ID
-    if (!clientId || !process.env.GOOGLE_CLIENT_SECRET || !/^[0-9a-f]{64}$/i.test(process.env.SCHEDULER_TOKEN_KEY || '')) {
-      return NextResponse.json({ok: false, error: 'Google OAuth credentials or SCHEDULER_TOKEN_KEY are not configured.'}, {status: 503})
+    const missing = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'].filter(name => !process.env[name]?.trim())
+    if (missing.length) {
+      return NextResponse.json({ok: false, error: `Configure ${missing.join(' and ')} in the Loopin server environment, then restart the app.`}, {status: 503})
+    }
+    if (!/^[0-9a-f]{64}$/i.test(process.env.SCHEDULER_TOKEN_KEY || '')) {
+      return NextResponse.json({ok: false, error: 'SCHEDULER_TOKEN_KEY must be a 64-character hexadecimal encryption key in the Loopin server environment.'}, {status: 503})
     }
     const publicUrl = process.env.SCHEDULER_PUBLIC_URL
     if (!publicUrl) return NextResponse.json({ok: false, error: 'SCHEDULER_PUBLIC_URL is not configured.'}, {status: 503})
@@ -24,7 +28,7 @@ export async function POST(request: NextRequest) {
     const redirectUri = new URL('/api/scheduler/admin/google/callback', base).toString()
     const url = new URL('https://accounts.google.com/o/oauth2/v2/auth')
     url.search = new URLSearchParams({
-      client_id: clientId,
+      client_id: clientId!,
       redirect_uri: redirectUri,
       response_type: 'code',
       scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.freebusy',
