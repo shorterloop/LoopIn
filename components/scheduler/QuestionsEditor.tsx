@@ -37,6 +37,7 @@ export default function QuestionsEditor({value, onChange}: {value: Question[]; o
         <button type="button" onClick={() => onChange(value.filter((_, i) => i !== index))}>Remove question</button>
       </div>
     </div>)}
-    <button className={styles.add} type="button" onClick={() => onChange([...value, {key: '', label: '', type: 'text', required: false}])}>Add question</button>
+    {value.length === 0 && <p className={styles.empty}>No extra questions.</p>}
+    <button className={styles.add} type="button" onClick={() => onChange([...value, {key: '', label: '', type: 'text', required: false}])}>+ Add question</button>
   </div>
 }

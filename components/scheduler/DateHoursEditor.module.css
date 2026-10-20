@@ -1,6 +1,9 @@
-.editor { display: grid; gap: 12px; }
-.closed { display: inline-flex; gap: 8px; align-items: center; }
-.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.range input { min-width: 105px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); padding: 8px; font: inherit; }
-.range button { width: 32px; height: 32px; display: inline-grid; place-items: center; border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; }
-.add { width: max-content; border: 0; padding: 0; background: transparent; color: var(--ember); font: inherit; cursor: pointer; }
+.editor { display: grid; gap: 10px; }
+.closed { display: inline-flex; gap: 8px; align-items: center; min-height: 32px; font-size: 14px; cursor: pointer; }
+.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--text-muted); font-size: 14px; }
+.range input { width: 132px; min-height: 38px; border: 1px solid var(--border-default); border-radius: var(--radius-sm); background: var(--bg-primary); color: var(--text-primary); padding: 6px 10px; font: inherit; font-variant-numeric: tabular-nums; }
+.range input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+.range button { width: 32px; height: 32px; display: inline-grid; place-items: center; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-muted); }
+.range button:hover { background: var(--st-blocked-soft); color: var(--st-blocked); }
+.add { width: max-content; border: 0; padding: 0; background: transparent; color: var(--accent-text); font: inherit; font-size: 13px; font-weight: 600; }
+.add:hover { text-decoration: underline; }

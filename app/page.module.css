@@ -1,0 +1,44 @@
+.hero { display: grid; justify-items: center; gap: 12px; margin: clamp(16px, 6vh, 64px) 0 32px; text-align: center; }
+.hero h1 { font-size: clamp(32px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; }
+.hero p { max-width: 480px; }
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.links { display: grid; gap: 10px; }
+
+.link {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.link:hover { border-color: var(--accent); }
+.link > span:last-child { display: grid; gap: 2px; }
+.link > span:last-child span { color: var(--text-secondary); font-size: 14px; }
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}

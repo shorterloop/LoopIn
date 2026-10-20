@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import SchedulerAdmin from '@/components/scheduler/SchedulerAdmin'
 
 export const metadata: Metadata = {
-  title: 'Admin | Loopin',
+  title: 'Meeting types | Loopin',
   robots: {index: false, follow: false},
 }
 

@@ -46,7 +46,6 @@ export const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || 
 
 export default function Turnstile({onToken, resetKey}: {onToken: (token: string) => void; resetKey?: number}) {
   const ref = useRef<HTMLDivElement>(null)
-  const resolvedTheme = 'light'
   const onTokenRef = useRef(onToken)
   onTokenRef.current = onToken
 
@@ -59,7 +58,7 @@ export default function Turnstile({onToken, resetKey}: {onToken: (token: string)
         if (cancelled || !ref.current || !window.turnstile) return
         widgetId = window.turnstile.render(ref.current, {
           sitekey: TURNSTILE_SITE_KEY,
-          theme: resolvedTheme === 'light' ? 'light' : 'dark',
+          theme: 'auto',
           callback: (token: string) => onTokenRef.current(token),
           'expired-callback': () => onTokenRef.current(''),
           'error-callback': () => onTokenRef.current(''),
@@ -71,7 +70,7 @@ export default function Turnstile({onToken, resetKey}: {onToken: (token: string)
       onTokenRef.current('')
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId)
     }
-  }, [resolvedTheme, resetKey])
+  }, [resetKey])
 
   if (!TURNSTILE_SITE_KEY) return null
   return <div className="lb-scheduler__captcha" ref={ref} />

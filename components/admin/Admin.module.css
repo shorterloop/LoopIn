@@ -1,0 +1,117 @@
+.app { min-height: 100vh; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.topbarInner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  max-width: 1180px;
+  height: 60px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nav {
+  display: flex;
+  align-self: stretch;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navLink:hover { color: var(--text-primary); }
+
+.navLink[aria-current='page'] {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+.signOut { margin-left: auto; }
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+.muted { color: var(--text-secondary); }
+
+.signIn {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  max-width: 420px;
+  margin: clamp(24px, 8vh, 80px) auto 0;
+}
+
+.signInHead { display: grid; gap: 8px; }
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+}
+
+.pageHeaderText { display: grid; gap: 6px; max-width: 680px; }
+
+.pageTitle { font-size: 28px; font-weight: 700; }
+
+.pageActions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.noticeOk { background: var(--st-ok-soft); color: var(--st-ok); }
+.noticeError { background: var(--st-blocked-soft); color: var(--st-blocked); }
+
+.noticeClose {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.noticeClose:hover { background: rgb(0 0 0 / 0.06); }
+
+@media (max-width: 720px) {
+  .topbarInner { gap: 12px; padding: 0 16px; }
+  .main { padding: 24px 16px 64px; }
+  .signOut { font-size: 0; gap: 0; padding: 5px 8px; }
+  .signOut svg { font-size: 16px; }
+}
