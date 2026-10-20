@@ -1,7 +1,7 @@
 'use client'
 
 import type {Weekday, WeeklyHours} from '@/lib/scheduler/types'
-import {FiX} from 'react-icons/fi'
+import {FiPlus, FiX} from 'react-icons/fi'
 import styles from './WeeklyHoursEditor.module.css'
 
 const DAYS: Array<[Weekday, string]> = [
@@ -29,7 +29,8 @@ export default function WeeklyHoursEditor({value, onChange}: {value: WeeklyHours
             <input type="time" aria-label={`${label} end ${index + 1}`} value={end} onChange={(event) => setDay(day, ranges.map((range, i) => i === index ? [start, event.target.value] : range))} />
             <button type="button" className={styles.iconButton} title="Remove hours" aria-label={`Remove ${label} hours ${index + 1}`} onClick={() => setDay(day, ranges.filter((_, i) => i !== index))}><FiX aria-hidden="true" /></button>
           </div>)}
-          {ranges.length > 0 && <button className={styles.add} type="button" onClick={() => setDay(day, [...ranges, ['13:00', '17:00']])}>Add hours</button>}
+          {ranges.length === 0 && <span className={styles.unavailable}>Unavailable</span>}
+          {ranges.length > 0 && <button className={styles.add} type="button" onClick={() => setDay(day, [...ranges, ['13:00', '17:00']])}><FiPlus aria-hidden="true" />Add hours</button>}
         </div>
       </div>
     })}

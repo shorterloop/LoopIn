@@ -6,5 +6,5 @@ export default async function EmbedPage({params}: {params:Promise<{slug:string}>
  const {slug} = await params
  const type = await getEventTypeBySlug(slug)
  if (!type) notFound()
- return <main className="embed-page"><h1>{type.title}</h1><Scheduler eventType={slug}/></main>
+ return <main className="embed-page"><Scheduler eventType={slug}/></main>
 }

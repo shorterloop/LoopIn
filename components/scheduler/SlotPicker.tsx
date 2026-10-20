@@ -16,6 +16,7 @@ import {
   zoneName,
   type Month,
 } from './time'
+import {FiChevronLeft, FiChevronRight} from 'react-icons/fi'
 
 /**
  * Month calendar + slot list. Shared by booking and rescheduling: give it
@@ -153,7 +154,7 @@ export default function SlotPicker({
             disabled={!canPrev}
             aria-label="Previous month"
           >
-            ‹
+            <FiChevronLeft aria-hidden="true" />
           </button>
           <p className="lb-scheduler__month-label" aria-live="polite">
             {monthLabel(month)}
@@ -165,7 +166,7 @@ export default function SlotPicker({
             disabled={!canNext}
             aria-label="Next month"
           >
-            ›
+            <FiChevronRight aria-hidden="true" />
           </button>
         </div>
 
@@ -194,9 +195,7 @@ export default function SlotPicker({
             ),
           )}
         </div>
-      </div>
 
-      <div className="lb-scheduler__slots">
         <div className="lb-form__field lb-scheduler__tz">
           <label htmlFor="lb-scheduler-tz">Time zone</label>
           <select id="lb-scheduler-tz" value={timeZone} onChange={(e) => onTimeZoneChange(e.target.value)}>
@@ -208,7 +207,9 @@ export default function SlotPicker({
           </select>
           <p className="lb-form__hint">{zoneName(timeZone)}</p>
         </div>
+      </div>
 
+      <div className="lb-scheduler__slots">
         {notice && (
           <p className="lb-form__error" role="alert">
             {notice}
@@ -216,9 +217,12 @@ export default function SlotPicker({
         )}
 
         {load.state === 'loading' && (
-          <p className="lb-scheduler__status" role="status">
-            Loading available times…
-          </p>
+          <div className="lb-scheduler__skeleton" role="status">
+            <span className="visually-hidden">Loading available times…</span>
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </div>
         )}
 
         {load.state === 'error' && (
@@ -234,7 +238,7 @@ export default function SlotPicker({
           <div className="lb-scheduler__status" role="status">
             <p>No times left in {monthLabel(month)}.</p>
             {canNext && (
-              <button type="button" className="link-ember lb-scheduler__link" onClick={() => setMonth(addMonths(month, 1))}>
+              <button type="button" className="lb-scheduler__link" onClick={() => setMonth(addMonths(month, 1))}>
                 See {monthLabel(addMonths(month, 1))} →
               </button>
             )}

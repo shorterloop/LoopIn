@@ -1,10 +1,14 @@
-.days { display: grid; gap: 0; border-top: 1px solid var(--border-subtle); }
-.day { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
-.dayName { display: flex; align-items: flex-start; gap: 8px; }
-.dayName input { margin-top: 4px; }
+.days { display: grid; }
+.day { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+.day:first-child { border-top: 1px solid var(--border-subtle); }
+.dayName { display: flex; align-items: center; gap: 10px; min-height: 38px; font-weight: 600; cursor: pointer; }
 .ranges { display: grid; gap: 8px; justify-items: start; }
-.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.range input { max-width: 130px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); padding: 7px; font: inherit; }
-.iconButton { border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 22px; line-height: 1; width: 30px; height: 30px; }
-.add { border: 0; background: transparent; color: var(--ember); cursor: pointer; padding: 0; font: inherit; }
-@media (max-width: 640px) { .day { grid-template-columns: 1fr; } .range .iconButton { margin-left: auto; } }
+.unavailable { display: flex; align-items: center; min-height: 38px; color: var(--text-muted); font-size: 14px; }
+.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--text-muted); font-size: 14px; }
+.range input { width: 132px; min-height: 38px; border: 1px solid var(--border-default); border-radius: var(--radius-sm); background: var(--bg-primary); color: var(--text-primary); padding: 6px 10px; font: inherit; font-variant-numeric: tabular-nums; }
+.range input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+.iconButton { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-muted); font-size: 16px; }
+.iconButton:hover { background: var(--st-blocked-soft); color: var(--st-blocked); }
+.add { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--accent-text); padding: 2px 0; font: inherit; font-size: 13px; font-weight: 600; }
+.add:hover { text-decoration: underline; }
+@media (max-width: 640px) { .day { grid-template-columns: 1fr; gap: 4px; } }

@@ -1,12 +1,18 @@
 .list { display: grid; gap: 12px; }
-.question { border: 1px solid var(--border-subtle); border-radius: 6px; padding: 16px; display: grid; gap: 12px; }
+.question { display: grid; gap: 14px; padding: 16px; border: 1px solid var(--border-subtle); border-radius: var(--radius); background: var(--bg-secondary); }
 .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.row label { display: grid; gap: 6px; min-width: 0; }
-.row input, .row select, .option input { width: 100%; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); padding: 8px 10px; font: inherit; }
-.options { display: grid; gap: 8px; }
+.row label { display: grid; gap: 6px; min-width: 0; font-size: 13px; font-weight: 600; }
+.row input, .row select, .option input { width: 100%; min-height: 38px; border: 1px solid var(--border-default); border-radius: var(--radius-sm); background: var(--bg-primary); color: var(--text-primary); padding: 7px 10px; font: inherit; font-size: 14px; font-weight: 400; }
+.row input:focus, .row select:focus, .option input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus-ring); }
+.options { display: grid; gap: 8px; font-size: 13px; font-weight: 600; }
 .option { display: flex; gap: 8px; max-width: 360px; }
-.option button { border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 22px; width: 32px; }
-.actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.actions label { display: flex; gap: 8px; align-items: center; }
-.actions button, .add { border: 0; background: transparent; color: var(--ember); cursor: pointer; padding: 0; font: inherit; justify-self: start; }
+.option button { display: grid; place-items: center; flex: none; width: 36px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-muted); }
+.option button:hover { background: var(--st-blocked-soft); color: var(--st-blocked); }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+.actions label { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
+.actions button { border: 0; background: transparent; color: var(--st-blocked); padding: 0; font: inherit; font-size: 13px; font-weight: 600; }
+.actions button:hover { text-decoration: underline; }
+.add { justify-self: start; border: 0; background: transparent; color: var(--accent-text); padding: 0; font: inherit; font-size: 13px; font-weight: 600; }
+.add:hover { text-decoration: underline; }
+.empty { color: var(--text-muted); font-size: 14px; }
 @media (max-width: 700px) { .row { grid-template-columns: 1fr; } }

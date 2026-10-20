@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import PublicFrame from '@/components/PublicFrame'
 import ManageBooking, {type ManageSummary} from '@/components/scheduler/ManageBooking'
 import {bookingForToken, SchedulerError} from '@/lib/scheduler/service'
 import {isWellFormedToken} from '@/lib/scheduler/security'
@@ -14,11 +15,7 @@ export const metadata: Metadata = {
 }
 
 function Shell({children}: {children: React.ReactNode}) {
-  return (
-    <section className="section">
-      <div className="container container--narrow">{children}</div>
-    </section>
-  )
+  return <PublicFrame narrow>{children}</PublicFrame>
 }
 
 export default async function ManageBookingPage({
@@ -64,7 +61,7 @@ export default async function ManageBookingPage({
           initialAction={action === 'cancel' || action === 'reschedule' ? action : undefined}
         />
       ) : (
-        <header className="section-header">
+        <header className="card section-header">
           <p className="eyebrow">Manage your meeting</p>
           <h1 className="headline-md">Link not found</h1>
           <p className="lead">{problem}</p>

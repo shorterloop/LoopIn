@@ -1,6 +1,7 @@
 'use client'
 
 import {useEffect, useState} from 'react'
+import {FiArrowLeft, FiVideo} from 'react-icons/fi'
 import SlotPicker from './SlotPicker'
 import {PROVIDER_LABEL} from './Scheduler'
 import {detectTimeZone, rangeLabel} from './time'
@@ -118,18 +119,17 @@ export default function ManageBooking({
 
         {changeable && mode === 'overview' && (
           <>
-            {summary.joinUrl && (
-              <p>
-                <a className="link-ember" href={summary.joinUrl} target="_blank" rel="noopener noreferrer">
+            <div className="lb-scheduler__actions">
+              {summary.joinUrl && (
+                <a className="btn btn--primary" href={summary.joinUrl} target="_blank" rel="noopener noreferrer">
+                  <FiVideo aria-hidden="true" />
                   Join with {PROVIDER_LABEL[summary.conferenceProvider]}
                 </a>
-              </p>
-            )}
-            <div className="lb-scheduler__actions">
-              <button type="button" className="btn btn--primary btn--sm" onClick={() => setMode('reschedule')}>
+              )}
+              <button type="button" className="btn btn--secondary" onClick={() => setMode('reschedule')}>
                 Reschedule
               </button>
-              <button type="button" className="btn btn--secondary btn--sm" onClick={() => setMode('confirm-cancel')}>
+              <button type="button" className="btn btn--secondary btn--danger" onClick={() => setMode('confirm-cancel')}>
                 Cancel meeting
               </button>
             </div>
@@ -138,10 +138,10 @@ export default function ManageBooking({
 
         {changeable && mode === 'confirm-cancel' && (
           <div className="lb-scheduler__actions">
-            <button type="button" className="btn btn--primary btn--sm" onClick={doCancel} disabled={busy}>
+            <button type="button" className="btn btn--danger-solid" onClick={doCancel} disabled={busy}>
               {busy ? 'Cancelling…' : 'Yes, cancel this meeting'}
             </button>
-            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setMode('overview')} disabled={busy}>
+            <button type="button" className="btn btn--ghost" onClick={() => setMode('overview')} disabled={busy}>
               Keep it
             </button>
           </div>
@@ -158,7 +158,8 @@ export default function ManageBooking({
         <>
           <div className="lb-scheduler__manage-bar">
             <p className="meta meta--upper">{busy ? 'Moving your meeting…' : 'Pick a new time'}</p>
-            <button type="button" className="link-ember lb-scheduler__link" onClick={() => setMode('overview')}>
+            <button type="button" className="lb-scheduler__link" onClick={() => setMode('overview')}>
+              <FiArrowLeft aria-hidden="true" />
               Back
             </button>
           </div>

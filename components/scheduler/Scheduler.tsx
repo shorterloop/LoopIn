@@ -2,6 +2,7 @@
 
 import {useEffect, useState, type FormEvent, type ReactNode} from 'react'
 import {useRouter} from 'next/navigation'
+import {FiCalendar, FiCheck, FiClock, FiGlobe, FiVideo} from 'react-icons/fi'
 import SlotPicker from './SlotPicker'
 import Turnstile, {TURNSTILE_SITE_KEY} from './Turnstile'
 import {detectTimeZone, rangeLabel, timeLabel, longDateLabel} from './time'
@@ -169,10 +170,12 @@ export default function Scheduler({eventType: slug, redirectHref, footnote}: Sch
 
   if (infoError) {
     return (
-      <div className="lb-scheduler">
-        <p className="lb-form__error" role="alert">
-          {infoError}
-        </p>
+      <div className="lb-scheduler lb-scheduler--single">
+        <div className="lb-scheduler__main">
+          <p className="lb-form__error" role="alert">
+            {infoError}
+          </p>
+        </div>
       </div>
     )
   }
@@ -180,33 +183,47 @@ export default function Scheduler({eventType: slug, redirectHref, footnote}: Sch
   if (!info) {
     return (
       <div className="lb-scheduler" aria-busy="true">
-        <p className="lb-scheduler__status" role="status">
-          Loading scheduler…
-        </p>
+        <div className="lb-scheduler__summary">
+          <div className="lb-scheduler__skeleton" aria-hidden="true">
+            <span style={{width: '70%'}} />
+            <span style={{width: '45%', height: 20}} />
+            <span style={{width: '55%', height: 20}} />
+          </div>
+        </div>
+        <div className="lb-scheduler__main">
+          <p className="visually-hidden" role="status">
+            Loading scheduler…
+          </p>
+          <div className="lb-scheduler__skeleton" aria-hidden="true">
+            <span style={{height: 280}} />
+          </div>
+        </div>
       </div>
     )
   }
 
   if (booked) {
     return (
-      <div className="lb-scheduler">
+      <div className="lb-scheduler lb-scheduler--single">
         <div className="lb-form__success lb-scheduler__done" role="status">
           <div className="lb-form__success-mark" aria-hidden="true">
-            ✓
+            <FiCheck />
           </div>
-          <h3 className="headline-md">You’re booked.</h3>
+          <h2 className="headline-md">You’re booked</h2>
+          <p className="meta">{booked.title}</p>
           <p className="lb-scheduler__done-when">{rangeLabel(booked.startsAt, booked.endsAt, timeZone)}</p>
           <p className="lb-form__hint">{timeZone.replace(/_/g, ' ')}</p>
           {booked.joinUrl && (
-            <p>
-              <a className="link-ember" href={booked.joinUrl} target="_blank" rel="noopener noreferrer">
+            <div className="lb-scheduler__actions">
+              <a className="btn btn--primary" href={booked.joinUrl} target="_blank" rel="noopener noreferrer">
+                <FiVideo aria-hidden="true" />
                 Join with {PROVIDER_LABEL[booked.conferenceProvider]}
               </a>
-            </p>
+            </div>
           )}
           <p className="lead">
-            A calendar invite is on its way to {booked.email}. It has links to reschedule or cancel if
-            plans change.
+            A calendar invite is on its way to <strong>{booked.email}</strong>. It has links to reschedule or cancel
+            if plans change.
           </p>
         </div>
       </div>
@@ -215,127 +232,173 @@ export default function Scheduler({eventType: slug, redirectHref, footnote}: Sch
 
   return (
     <div className="lb-scheduler">
-      <div className="lb-scheduler__meta">
-        <p className="meta meta--upper">
-          {info.durationMin} min · {PROVIDER_LABEL[info.conferenceProvider]}
-        </p>
-        {info.description && <p className="lb-scheduler__description">{info.description}</p>}
-      </div>
-
-      {!slot ? (
-        <SlotPicker
-          type={info.slug}
-          maxDaysAhead={info.maxDaysAhead}
-          timeZone={timeZone}
-          onTimeZoneChange={setTimeZone}
-          onPick={pick}
-          refreshKey={refreshKey}
-          notice={notice}
-        />
-      ) : (
-        <form className="lb-form lb-scheduler__form" onSubmit={submit} noValidate>
-          <div className="lb-scheduler__chosen">
-            <p>
-              <strong>{longDateLabel(slot, timeZone)}</strong>
-              <br />
-              {timeLabel(slot, timeZone)} · {info.durationMin} min · {timeZone.replace(/_/g, ' ')}
-            </p>
-            <button type="button" className="link-ember lb-scheduler__link" onClick={() => backToSlots()}>
-              Change
-            </button>
-          </div>
-
-          <div className="lb-form__hp" aria-hidden="true">
-            <label htmlFor="sch-website">Website</label>
-            <input type="text" id="sch-website" name="website" tabIndex={-1} autoComplete="off" />
-          </div>
-
-          <div className="lb-form__field">
-            <label htmlFor="sch-name">Name *</label>
-            <input id="sch-name" name="name" type="text" required autoComplete="name" maxLength={200} />
-          </div>
-
-          <div className="lb-form__row">
-            <div className="lb-form__field">
-              <label htmlFor="sch-email">{info.requireWorkEmail ? 'Work email *' : 'Email *'}</label>
-              <input
-                id="sch-email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                maxLength={200}
-                placeholder="you@company.com"
-              />
-            </div>
-            <div className="lb-form__field">
-              <label htmlFor="sch-company">Company *</label>
-              <input id="sch-company" name="company" type="text" required autoComplete="organization" maxLength={200} />
-            </div>
-          </div>
-
-          {info.questions.map((q) => (
-            <div className="lb-form__field" key={q.key}>
-              <label htmlFor={`sch-q-${q.key}`}>
-                {q.label}
-                {q.required ? ' *' : ''}
-              </label>
-              {q.type === 'textarea' ? (
-                <textarea
-                  id={`sch-q-${q.key}`}
-                  name={`q-${q.key}`}
-                  rows={4}
-                  required={q.required}
-                  maxLength={5000}
-                  placeholder={q.placeholder}
-                />
-              ) : q.type === 'select' ? (
-                <select id={`sch-q-${q.key}`} name={`q-${q.key}`} required={q.required} defaultValue="">
-                  <option value="" disabled>
-                    Select one
-                  </option>
-                  {(q.options ?? []).map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  id={`sch-q-${q.key}`}
-                  name={`q-${q.key}`}
-                  type="text"
-                  required={q.required}
-                  maxLength={5000}
-                  placeholder={q.placeholder}
-                />
-              )}
-            </div>
-          ))}
-
-          <Turnstile onToken={setCaptcha} resetKey={captchaReset} />
-
-          {error && (
-            <p className="lb-form__error" role="alert">
-              {error}
-            </p>
+      <aside className="lb-scheduler__summary">
+        <h1 className="lb-scheduler__title">{info.title}</h1>
+        <ul className="lb-scheduler__facts">
+          <li>
+            <FiClock aria-hidden="true" />
+            {info.durationMin} min
+          </li>
+          <li>
+            <FiVideo aria-hidden="true" />
+            {PROVIDER_LABEL[info.conferenceProvider]}
+          </li>
+          {slot && (
+            <li>
+              <FiCalendar aria-hidden="true" />
+              <span>
+                {timeLabel(slot, timeZone)}, {longDateLabel(slot, timeZone)}
+              </span>
+            </li>
           )}
+          <li>
+            <FiGlobe aria-hidden="true" />
+            {timeZone.replace(/_/g, ' ')}
+          </li>
+        </ul>
+        {info.description && <p className="lb-scheduler__description">{info.description}</p>}
+      </aside>
 
-          <div>
-            <button type="submit" className="btn btn--primary" disabled={status !== 'idle'}>
-              {status === 'idle' ? 'Book meeting' : status === 'submitting' ? 'Booking…' : 'Booked — redirecting…'}
-            </button>
-            <div className="lb-form__fineprint">
-              {footnote}
+      <section className="lb-scheduler__main">
+        {!slot ? (
+          <>
+            <h2 className="lb-scheduler__step-title">Select a date & time</h2>
+            <SlotPicker
+              type={info.slug}
+              maxDaysAhead={info.maxDaysAhead}
+              timeZone={timeZone}
+              onTimeZoneChange={setTimeZone}
+              onPick={pick}
+              refreshKey={refreshKey}
+              notice={notice}
+            />
+          </>
+        ) : (
+          <form className="lb-form lb-scheduler__form" onSubmit={submit} noValidate>
+            <h2 className="lb-scheduler__step-title">Enter your details</h2>
+            <div className="lb-scheduler__chosen">
               <p>
-                By booking you agree to our{' '}
-                <a className="link-ember" href="/privacy-policy" target="_blank" rel="noopener noreferrer">booking privacy information</a>
-                .
+                <strong>{longDateLabel(slot, timeZone)}</strong>
+                <br />
+                {timeLabel(slot, timeZone)} · {info.durationMin} min · {timeZone.replace(/_/g, ' ')}
               </p>
+              <button type="button" className="lb-scheduler__link" onClick={() => backToSlots()}>
+                Change
+              </button>
             </div>
-          </div>
-        </form>
-      )}
+
+            <div className="lb-form__hp" aria-hidden="true">
+              <label htmlFor="sch-website">Website</label>
+              <input type="text" id="sch-website" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
+
+            <div className="lb-form__field">
+              <label htmlFor="sch-name">
+                Name
+                <Required />
+              </label>
+              <input id="sch-name" name="name" type="text" required autoComplete="name" maxLength={200} />
+            </div>
+
+            <div className="lb-form__row">
+              <div className="lb-form__field">
+                <label htmlFor="sch-email">
+                  {info.requireWorkEmail ? 'Work email' : 'Email'}
+                  <Required />
+                </label>
+                <input
+                  id="sch-email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  maxLength={200}
+                  placeholder="you@company.com"
+                />
+              </div>
+              <div className="lb-form__field">
+                <label htmlFor="sch-company">
+                  Company
+                  <Required />
+                </label>
+                <input id="sch-company" name="company" type="text" required autoComplete="organization" maxLength={200} />
+              </div>
+            </div>
+
+            {info.questions.map((q) => (
+              <div className="lb-form__field" key={q.key}>
+                <label htmlFor={`sch-q-${q.key}`}>
+                  {q.label}
+                  {q.required && <Required />}
+                </label>
+                {q.type === 'textarea' ? (
+                  <textarea
+                    id={`sch-q-${q.key}`}
+                    name={`q-${q.key}`}
+                    rows={4}
+                    required={q.required}
+                    maxLength={5000}
+                    placeholder={q.placeholder}
+                  />
+                ) : q.type === 'select' ? (
+                  <select id={`sch-q-${q.key}`} name={`q-${q.key}`} required={q.required} defaultValue="">
+                    <option value="" disabled>
+                      Select one
+                    </option>
+                    {(q.options ?? []).map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    id={`sch-q-${q.key}`}
+                    name={`q-${q.key}`}
+                    type="text"
+                    required={q.required}
+                    maxLength={5000}
+                    placeholder={q.placeholder}
+                  />
+                )}
+              </div>
+            ))}
+
+            <Turnstile onToken={setCaptcha} resetKey={captchaReset} />
+
+            {error && (
+              <p className="lb-form__error" role="alert">
+                {error}
+              </p>
+            )}
+
+            <div>
+              <button type="submit" className="btn btn--primary" disabled={status !== 'idle'}>
+                {status === 'idle' ? 'Book meeting' : status === 'submitting' ? 'Booking…' : 'Booked — redirecting…'}
+              </button>
+              <div className="lb-form__fineprint">
+                {footnote}
+                <p>
+                  By booking you agree to our{' '}
+                  <a className="link-ember" href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                    booking privacy information
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
+          </form>
+        )}
+      </section>
     </div>
+  )
+}
+
+/** Visual marker only; the input's `required` attribute carries the meaning. */
+function Required() {
+  return (
+    <span className="lb-form__required" aria-hidden="true">
+      *
+    </span>
   )
 }

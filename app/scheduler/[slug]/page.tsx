@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import PublicFrame from '@/components/PublicFrame'
 import Scheduler from '@/components/scheduler/Scheduler'
 import {getEventTypeBySlug} from '@/lib/scheduler/repo'
-import styles from './page.module.css'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,17 +26,8 @@ export default async function BookingPage({params}: Props) {
   if (!eventType) notFound()
 
   return (
-    <main className={styles.page}>
-      <div className={styles.shell}>
-        <header className={styles.header}>
-          <a className={styles.brand} href="/">Loopin</a>
-        </header>
-        <div className={styles.content}>
-          <p className={styles.eyebrow}>Book a meeting</p>
-          <h1 className={styles.title}>{eventType.title}</h1>
-          <Scheduler eventType={slug} />
-        </div>
-      </div>
-    </main>
+    <PublicFrame>
+      <Scheduler eventType={slug} />
+    </PublicFrame>
   )
 }
